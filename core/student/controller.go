@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/TulioGuaraldoB/school-report/db/entity"
+	"github.com/TulioGuaraldoB/school-report/util"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -20,7 +21,10 @@ func NewController(service interfaceService) controller {
 }
 
 func (c *controller) GetAll(ctx *gin.Context) {
-	students, err := c.service.all()
+	pagination := util.PaginationRequest(ctx)
+	student := entity.Student{}
+
+	students, err := c.service.all(&student, pagination)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
