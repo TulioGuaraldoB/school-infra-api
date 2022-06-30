@@ -1,9 +1,12 @@
 package student
 
-import "github.com/TulioGuaraldoB/school-report/db/entity"
+import (
+	"github.com/TulioGuaraldoB/school-report/db/entity"
+	"github.com/TulioGuaraldoB/school-report/util"
+)
 
 type interfaceService interface {
-	all() ([]entity.Student, error)
+	all(student *entity.Student, pagination util.Pagination) ([]entity.Student, error)
 	show(id uint) (*entity.Student, error)
 	create(student *entity.Student) error
 	createReport(report *entity.StudentReport) error
@@ -19,8 +22,8 @@ func NewService(repository interfaceRepository) interfaceService {
 	}
 }
 
-func (s *service) all() ([]entity.Student, error) {
-	return s.repository.all()
+func (s *service) all(student *entity.Student, pagination util.Pagination) ([]entity.Student, error) {
+	return s.repository.all(student, pagination)
 }
 
 func (s *service) show(id uint) (*entity.Student, error) {
