@@ -7,21 +7,22 @@ import (
 )
 
 type ReportResponse struct {
-	ID       uint   `json:"report_id"`
-	Message  string `json:"message"`
-	Location string `json:"location"`
+	ID       uint            `json:"report_id"`
+	Message  string          `json:"message"`
+	Location string          `json:"location"`
+	Student  StudentResponse `json:"student"`
 }
 
 type ReportRequest struct {
-	Message  string `json:"message"`
-	Location string `json:"location"`
+	Message   string `json:"message"`
+	Location  string `json:"location"`
+	StudentID uint   `json:"student_id"`
 }
 
 type StudentResponse struct {
-	Name   string         `json:"name"`
-	Class  string         `json:"class"`
-	Email  string         `json:"email"`
-	Report ReportResponse `json:"report"`
+	Name  string `json:"name"`
+	Class string `json:"class"`
+	Email string `json:"email"`
 }
 
 type StudentRequest struct {
@@ -35,11 +36,6 @@ func EntityToResponse(student *entity.Student, res *StudentResponse) {
 		Name:  student.Name,
 		Class: student.Class,
 		Email: student.Email,
-		Report: ReportResponse{
-			ID:       student.Report.ID,
-			Message:  student.Report.Message,
-			Location: student.Report.Location,
-		},
 	}
 }
 
@@ -51,9 +47,21 @@ func RequestToCreate(req *StudentRequest, student *entity.Student) {
 		Name:      req.Name,
 		Class:     req.Class,
 		Email:     req.Email,
-		ReportID:  1,
 		CreatedAt: now,
 		UpdatedAt: now,
+	}
+}
+
+func ReportToResponse(report *entity.StudentReport, res *ReportResponse) {
+	*res = ReportResponse{
+		ID:       report.ID,
+		Message:  report.Message,
+		Location: report.Location,
+		Student: StudentResponse{
+			Name:  report.Student.Name,
+			Class: report.Student.Class,
+			Email: report.Student.Email,
+		},
 	}
 }
 
@@ -64,6 +72,7 @@ func RequestToMessageReport(req *ReportRequest, report *entity.StudentReport) {
 	*report = entity.StudentReport{
 		Message:   req.Message,
 		Location:  req.Location,
+		StudentID: req.StudentID,
 		CreatedAt: now,
 		UpdatedAt: now,
 	}

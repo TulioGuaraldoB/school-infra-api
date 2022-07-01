@@ -98,8 +98,38 @@ func (c *controller) CreateStudent(ctx *gin.Context) {
 	})
 }
 
+func (c *controller) GetAllReports(ctx *gin.Context) {
+	reports, err := c.service.allReports()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	reportRes := ReportResponse{}
+	reportsRes := []ReportResponse{}
+
+	for _, report := range reports {
+		ReportToResponse(&report, &reportRes)
+		reportsRes = append(reportsRes, reportRes)
+	}
+
+	ctx.IndentedJSON(http.StatusOK, reportsRes)
+}
+
 func (c *controller) CreateReport(ctx *gin.Context) {
-	reportReq := ReportRequest{}
+	id, err := strconv.ParseInt(ctx.Param("id"), 10, 32)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	reportReq := ReportRequest{
+		StudentID: uint(id),
+	}
 	if err := ctx.ShouldBindJSON(&reportReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

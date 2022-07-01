@@ -9,6 +9,7 @@ type interfaceService interface {
 	all(student *entity.Student, pagination util.Pagination) ([]entity.Student, error)
 	show(id uint) (*entity.Student, error)
 	create(student *entity.Student) error
+	allReports() ([]entity.StudentReport, error)
 	createReport(report *entity.StudentReport) error
 }
 
@@ -32,6 +33,10 @@ func (s *service) show(id uint) (*entity.Student, error) {
 
 func (s *service) create(student *entity.Student) error {
 	return s.repository.create(student)
+}
+
+func (s *service) allReports() ([]entity.StudentReport, error) {
+	return s.repository.allReports()
 }
 
 func (s *service) createReport(report *entity.StudentReport) error {

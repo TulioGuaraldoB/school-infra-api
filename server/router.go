@@ -26,6 +26,7 @@ func GetRoutes() *gin.Engine {
 				student.GET("", studentController.GetAll)
 				student.GET(":id", studentController.GetById)
 				student.POST("", studentController.CreateStudent)
+				student.GET("report", studentController.GetAllReports)
 			}
 
 			report := student.Group(":id/report")
