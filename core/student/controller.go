@@ -24,7 +24,12 @@ func (c *controller) GetAll(ctx *gin.Context) {
 	pagination := util.PaginationRequest(ctx)
 	student := entity.Student{}
 
-	students, err := c.service.all(&student, pagination)
+	reqAll := RequestAll{
+		Pagination: pagination,
+		Entity:     student,
+	}
+
+	students, err := c.service.all(&reqAll)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

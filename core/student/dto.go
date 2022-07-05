@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/TulioGuaraldoB/school-report/db/entity"
+	"github.com/TulioGuaraldoB/school-report/util"
 )
 
 type ReportResponse struct {
@@ -29,6 +30,11 @@ type StudentRequest struct {
 	Name  string `json:"name"`
 	Class string `json:"class"`
 	Email string `json:"email"`
+}
+
+type RequestAll struct {
+	Pagination util.Pagination
+	Entity     entity.Student
 }
 
 func EntityToResponse(student *entity.Student, res *StudentResponse) {

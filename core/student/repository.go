@@ -2,12 +2,11 @@ package student
 
 import (
 	"github.com/TulioGuaraldoB/school-report/db/entity"
-	"github.com/TulioGuaraldoB/school-report/util"
 	"gorm.io/gorm"
 )
 
 type interfaceRepository interface {
-	all(student *entity.Student, pagination util.Pagination) ([]entity.Student, error)
+	all(requestAll *RequestAll) ([]entity.Student, error)
 	show(id uint) (*entity.Student, error)
 	create(student *entity.Student) error
 	allReports() ([]entity.StudentReport, error)
@@ -24,13 +23,15 @@ func NewRepository(db *gorm.DB) interfaceRepository {
 	}
 }
 
-func (r *repository) all(student *entity.Student, pagination util.Pagination) ([]entity.Student, error) {
+func (r *repository) all(requestAll *RequestAll) ([]entity.Student, error) {
 	students := []entity.Student{}
 
-	offset := (pagination.Page - 1) * pagination.Limit
-	query := r.db.Limit(pagination.Limit).Offset(offset).Order(pagination.Sort)
+	offset := (requestAll.Pagination.Page - 1) * requestAll.Pagination.Limit
+	query := r.db.Limit(requestAll.Pagination.Limit).Offset(offset).Order(requestAll.Pagination.Sort)
 
-	result := query.Where(student).Find(&students)
+	result := query.
+		Where(requestAll.Entity).
+		Find(&students)
 
 	if result.Error != nil {
 		return nil, result.Error
