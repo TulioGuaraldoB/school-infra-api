@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/TulioGuaraldoB/school-report/db/entity"
-	"github.com/TulioGuaraldoB/school-report/util"
+	"github.com/TulioGuaraldoB/school-report/util/pagination"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -21,7 +21,7 @@ func NewController(service interfaceService) controller {
 }
 
 func (c *controller) GetAll(ctx *gin.Context) {
-	pagination := util.PaginationRequest(ctx)
+	pagination := pagination.PaginationRequest(ctx)
 	student := entity.Student{}
 
 	reqAll := RequestAll{
@@ -45,7 +45,14 @@ func (c *controller) GetAll(ctx *gin.Context) {
 		studentsRes = append(studentsRes, studentRes)
 	}
 
-	ctx.IndentedJSON(http.StatusOK, studentsRes)
+	res := PaginationResponse{
+		Limit: reqAll.Pagination.Limit,
+		Page:  reqAll.Pagination.Page,
+		Sort:  reqAll.Pagination.Sort,
+		Rows:  studentsRes,
+	}
+
+	ctx.IndentedJSON(http.StatusOK, res)
 }
 
 func (c *controller) GetById(ctx *gin.Context) {

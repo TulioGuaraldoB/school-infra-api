@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/TulioGuaraldoB/school-report/db/entity"
-	"github.com/TulioGuaraldoB/school-report/util"
+	"github.com/TulioGuaraldoB/school-report/util/pagination"
 )
 
 type ReportResponse struct {
@@ -33,8 +33,15 @@ type StudentRequest struct {
 }
 
 type RequestAll struct {
-	Pagination util.Pagination
+	Pagination pagination.Pagination
 	Entity     entity.Student
+}
+
+type PaginationResponse struct {
+	Limit int               `json:"limit"`
+	Page  int               `json:"page"`
+	Sort  string            `json:"sort"`
+	Rows  []StudentResponse `json:"rows"`
 }
 
 func EntityToResponse(student *entity.Student, res *StudentResponse) {
