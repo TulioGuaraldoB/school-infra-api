@@ -43,16 +43,11 @@ func (c *controller) GetAll(ctx *gin.Context) {
 	for _, student := range students {
 		EntityToResponse(&student, &studentRes)
 		studentsRes = append(studentsRes, studentRes)
+
+		reqAll.Pagination.Rows = studentsRes
 	}
 
-	res := PaginationResponse{
-		Limit: reqAll.Pagination.Limit,
-		Page:  reqAll.Pagination.Page,
-		Sort:  reqAll.Pagination.Sort,
-		Rows:  studentsRes,
-	}
-
-	ctx.IndentedJSON(http.StatusOK, res)
+	ctx.IndentedJSON(http.StatusOK, reqAll.Pagination)
 }
 
 func (c *controller) GetById(ctx *gin.Context) {

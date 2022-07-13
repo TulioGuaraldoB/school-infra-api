@@ -1,2 +1,5 @@
 ### ENV ###
 .env
+
+### VS Code ###
+.vscode

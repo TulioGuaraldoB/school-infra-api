@@ -7,9 +7,10 @@ import (
 )
 
 type Pagination struct {
-	Limit int    `json:"limit"`
-	Page  int    `json:"page"`
-	Sort  string `json:"sort"`
+	Limit int         `json:"limit"`
+	Page  int         `json:"page"`
+	Sort  string      `json:"sort"`
+	Rows  interface{} `json:"rows"`
 }
 
 func PaginationRequest(ctx *gin.Context) Pagination {

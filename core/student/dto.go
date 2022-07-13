@@ -37,13 +37,6 @@ type RequestAll struct {
 	Entity     entity.Student
 }
 
-type PaginationResponse struct {
-	Limit int               `json:"limit"`
-	Page  int               `json:"page"`
-	Sort  string            `json:"sort"`
-	Rows  []StudentResponse `json:"rows"`
-}
-
 func EntityToResponse(student *entity.Student, res *StudentResponse) {
 	*res = StudentResponse{
 		Name:  student.Name,
