@@ -37,6 +37,11 @@ type RequestAll struct {
 	Entity     entity.Student
 }
 
+type Credentials struct {
+	Username string `json:"user_name"`
+	Password string `json:"password"`
+}
+
 func EntityToResponse(student *entity.Student, res *StudentResponse) {
 	*res = StudentResponse{
 		Name:  student.Name,

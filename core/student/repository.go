@@ -7,10 +7,11 @@ import (
 
 type interfaceRepository interface {
 	all(requestAll *RequestAll) ([]entity.Student, error)
-	show(id uint) (*entity.Student, error)
+	getStudent(id uint) (*entity.Student, error)
 	create(student *entity.Student) error
 	allReports() ([]entity.StudentReport, error)
 	createReport(report *entity.StudentReport) error
+	getByCredentials(credentials Credentials) (*entity.User, error)
 }
 
 type repository struct {
@@ -40,7 +41,7 @@ func (r *repository) all(requestAll *RequestAll) ([]entity.Student, error) {
 	return students, nil
 }
 
-func (r *repository) show(id uint) (*entity.Student, error) {
+func (r *repository) getStudent(id uint) (*entity.Student, error) {
 	student := entity.Student{}
 	if err := r.db.First(&student, &id).Error; err != nil {
 		return nil, err
@@ -72,4 +73,15 @@ func (r *repository) createReport(report *entity.StudentReport) error {
 	}
 
 	return nil
+}
+
+func (r *repository) getByCredentials(credentials Credentials) (*entity.User, error) {
+	user := entity.User{Username: credentials.Username, Password: credentials.Password}
+	if err := r.db.Where(&user).
+		First(&user).
+		Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }

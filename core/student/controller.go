@@ -59,7 +59,7 @@ func (c *controller) GetById(ctx *gin.Context) {
 		return
 	}
 
-	student, err := c.service.show(uint(id))
+	student, err := c.service.getStudent(uint(id))
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusNotFound, gin.H{
@@ -158,4 +158,24 @@ func (c *controller) CreateReport(ctx *gin.Context) {
 		"message": "report inserted successfully!",
 		"student": reportReq,
 	})
+}
+
+func (c *controller) Login(ctx *gin.Context) {
+	signInCredentials := Credentials{}
+	if err := ctx.ShouldBindJSON(&signInCredentials); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	token, err := c.service.getByCredentials(signInCredentials)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, token)
 }
