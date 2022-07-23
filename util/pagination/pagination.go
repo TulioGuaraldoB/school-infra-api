@@ -7,13 +7,15 @@ import (
 )
 
 type Pagination struct {
-	Limit int         `json:"limit"`
-	Page  int         `json:"page"`
-	Sort  string      `json:"sort"`
-	Rows  interface{} `json:"rows"`
+	Search string      `json:"search"`
+	Limit  int         `json:"limit"`
+	Page   int         `json:"page"`
+	Sort   string      `json:"sort"`
+	Rows   interface{} `json:"rows"`
 }
 
 func PaginationRequest(ctx *gin.Context) Pagination {
+	search := ""
 	limit := 10
 	page := 1
 	sort := "Id desc"
@@ -36,12 +38,17 @@ func PaginationRequest(ctx *gin.Context) Pagination {
 			sort = queryValue
 			break
 
+		case "search":
+			search = queryValue
+			break
+
 		}
 	}
 
 	return Pagination{
-		Limit: limit,
-		Page:  page,
-		Sort:  sort,
+		Search: search,
+		Limit:  limit,
+		Page:   page,
+		Sort:   sort,
 	}
 }

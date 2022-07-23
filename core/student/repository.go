@@ -31,6 +31,10 @@ func (r *repository) all(requestAll *RequestAll) ([]entity.Student, error) {
 	offset := (requestAll.Pagination.Page - 1) * requestAll.Pagination.Limit
 	query := r.db.Limit(requestAll.Pagination.Limit).Offset(offset).Order(requestAll.Pagination.Sort)
 
+	if requestAll.Pagination.Search != "" {
+		requestAll.Entity.Name = requestAll.Pagination.Search
+	}
+
 	result := query.
 		Where(requestAll.Entity).
 		Find(&students)
