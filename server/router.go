@@ -36,6 +36,7 @@ func GetRoutes() *gin.Engine {
 		}
 
 		v1.POST("login", studentController.Login)
+		v1.POST("register", studentController.Register)
 	}
 
 	router.GET("health", func(ctx *gin.Context) {

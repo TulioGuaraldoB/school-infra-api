@@ -12,6 +12,7 @@ type interfaceRepository interface {
 	allReports() ([]entity.StudentReport, error)
 	createReport(report *entity.StudentReport) error
 	getByCredentials(credentials Credentials) (*entity.User, error)
+	createUser(user *entity.User) error
 }
 
 type repository struct {
@@ -51,11 +52,7 @@ func (r *repository) getStudent(id uint) (*entity.Student, error) {
 }
 
 func (r *repository) create(student *entity.Student) error {
-	if err := r.db.Create(&student).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return r.db.Create(&student).Error
 }
 
 func (r *repository) allReports() ([]entity.StudentReport, error) {
@@ -68,11 +65,7 @@ func (r *repository) allReports() ([]entity.StudentReport, error) {
 }
 
 func (r *repository) createReport(report *entity.StudentReport) error {
-	if err := r.db.Create(&report).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return r.db.Create(&report).Error
 }
 
 func (r *repository) getByCredentials(credentials Credentials) (*entity.User, error) {
@@ -84,4 +77,8 @@ func (r *repository) getByCredentials(credentials Credentials) (*entity.User, er
 	}
 
 	return &user, nil
+}
+
+func (r *repository) createUser(user *entity.User) error {
+	return r.db.Create(&user).Error
 }

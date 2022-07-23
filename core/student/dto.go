@@ -42,6 +42,12 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
+type UserRequest struct {
+	Name     string `json:"name"`
+	Username string `json:"user_name"`
+	Password string `json:"password"`
+}
+
 func EntityToResponse(student *entity.Student, res *StudentResponse) {
 	*res = StudentResponse{
 		Name:  student.Name,
@@ -86,5 +92,13 @@ func RequestToMessageReport(req *ReportRequest, report *entity.StudentReport) {
 		StudentID: req.StudentID,
 		CreatedAt: now,
 		UpdatedAt: now,
+	}
+}
+
+func RequestToUser(req *UserRequest, user *entity.User) {
+	*user = entity.User{
+		Name:     req.Name,
+		Username: req.Username,
+		Password: req.Password,
 	}
 }

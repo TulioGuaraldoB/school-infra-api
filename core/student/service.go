@@ -2,6 +2,7 @@ package student
 
 import (
 	"github.com/TulioGuaraldoB/school-report/db/entity"
+	"github.com/TulioGuaraldoB/school-report/util/encrypt"
 	"github.com/TulioGuaraldoB/school-report/util/jwt"
 )
 
@@ -12,6 +13,7 @@ type interfaceService interface {
 	allReports() ([]entity.StudentReport, error)
 	createReport(report *entity.StudentReport) error
 	getByCredentials(credentials Credentials) (*string, error)
+	createUser(user *entity.User) error
 }
 
 type service struct {
@@ -45,6 +47,11 @@ func (s *service) createReport(report *entity.StudentReport) error {
 }
 
 func (s *service) getByCredentials(credentials Credentials) (*string, error) {
+	password := credentials.Password
+	hashedPassword := encrypt.HashToSHA256(password)
+
+	credentials.Password = hashedPassword
+
 	user, err := s.repository.getByCredentials(credentials)
 	if err != nil {
 		return nil, err
@@ -56,4 +63,13 @@ func (s *service) getByCredentials(credentials Credentials) (*string, error) {
 	}
 
 	return token, nil
+}
+
+func (s *service) createUser(user *entity.User) error {
+	password := user.Password
+	hashedPassword := encrypt.HashToSHA256(password)
+
+	user.Password = hashedPassword
+
+	return s.repository.createUser(user)
 }

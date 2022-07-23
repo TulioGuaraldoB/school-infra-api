@@ -179,3 +179,28 @@ func (c *controller) Login(ctx *gin.Context) {
 
 	ctx.IndentedJSON(http.StatusOK, token)
 }
+
+func (c *controller) Register(ctx *gin.Context) {
+	userReq := UserRequest{}
+	if err := ctx.ShouldBindJSON(&userReq); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	user := entity.User{}
+	RequestToUser(&userReq, &user)
+
+	if err := c.service.createUser(&user); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, gin.H{
+		"user":    userReq,
+		"message": "user registered successfully!",
+	})
+}
